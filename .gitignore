@@ -1,0 +1,29 @@
+# Virtual environment
+.venv/
+
+# IDE/project config
+.idea/
+
+# Dataset CSV files
+CSV/
+
+# Mediapipe handtracking model
+handtracking.task
+
+# Any other failed runs or temporary files
+failed/
+*.pyc
+__pycache__/
+*.pkl
+*.tmp
+*.log
+
+# Optional: system files
+.DS_Store
+Thumbs.db
+
+failed/
+
+downloader.py
+hand_tracking.task
+

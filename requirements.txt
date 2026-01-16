@@ -1,0 +1,7 @@
+torch
+opencv-python
+mediapipe
+pandas
+numpy
+ffmpeg-python
+tqdm
