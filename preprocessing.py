@@ -1,5 +1,5 @@
 import os
-import concurrent.futures as multithread
+from concurrent.futures import ProcessPoolExecutor as multithread
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -7,9 +7,10 @@ import pandas as pd
 import torch
 
 
+
 # file paths and other global unchanging variables here
 split = "train"
-csv = f"/maindrive/Programing/Python/Sign_ Language_Translator/CSV/{split}.csv"
+csv = f"/maindrive/Programing/Python/Sign_Language_Translator/CSV/{split}.csv"
 videos = f"/mnt/ML_DATASET/Sign_Language_Translation/how2sign/trimmed/{split}/"
 destination = f"/mnt/ML_DATASET/Sign_Language_Translation/how2sign/pt_files/{split}/"
 failed_txt = f"/maindrive/Programing/Python/Sign_Language_Translator/failed/{split}_failed.txt"
@@ -44,17 +45,21 @@ def preprocessor(y):
         return
     vid = cv2.VideoCapture(video_filepath)
     fps = vid.get(cv2.CAP_PROP_FPS)
+    length = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
     if fps == 0:
         failed(
-            f"{video_filepath} is corrupted.. please check source and either rectify or yeet from csv"
+            f"{video_filepath} is corrupted and doesnt have a valid fps.. please check source and either rectify or yeet from csv"
         )
         return
+    if length == 0:
+        failed(
+            f'{video_filepath} is corrupted but this time instead of fps, it aint got any frames itself.. anyways check source and rectify or yeetus deletus'
+        )
     with HandLandmarker.create_from_options(options) as landmarker:
         framecount = 0
         while True:
             ret, frame = vid.read()
             if not ret:
-                failed(f"{video_filepath} can't be read by opencv2")
                 break
             else:
                 framecount += 1
@@ -77,5 +82,4 @@ def preprocessor(y):
 
 
 with multithread(max_workers=2) as executor:
-    list(executor.map(preprocessor), [row for _, row in metadata.iterrows()])
-
+    list(executor.map(preprocessor, [row for _, row in metadata.iterrows()]))
