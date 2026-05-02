@@ -26,4 +26,4 @@ failed/
 
 downloader.py
 hand_tracking.task
-
+face_landmarker.task
