@@ -4,12 +4,6 @@
 # IDE/project config
 .idea/
 
-# Dataset CSV files
-CSV/
-
-# Mediapipe handtracking model
-handtracking.task
-
 # Any other failed runs or temporary files
 failed/
 *.pyc
@@ -17,6 +11,7 @@ __pycache__/
 *.pkl
 *.tmp
 *.log
+.python-version
 
 # Optional: system files
 .DS_Store
@@ -25,5 +20,7 @@ Thumbs.db
 failed/
 
 downloader.py
-hand_tracking.task
+hand_landmarker.task
 face_landmarker.task
+pose_landmarker.task
+shell.nix
