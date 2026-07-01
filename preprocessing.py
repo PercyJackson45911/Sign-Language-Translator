@@ -12,9 +12,9 @@ import gc
 
 # file paths and other global unchanging variables here
 split = "train"
-csv = f"/maindrive/Programing/ASL_Citizen/splits/{split}.csv"
-videos = f"/maindrive/Programing/ASL_Citizen/videos/"
-destination = f"/maindrive/Programing/ASL_Citizen/ptfs/{split}/"
+csv = f"/storage/ASL_Citizen/splits/{split}.csv"
+videos = f"/storage/ASL_Citizen/videos/"
+destination = f"/storage/ASL_Citizen/ptfs/{split}/"
 failed_txt = f"/maindrive/Programing/Sign-Language-Translator/failed/{split}_failed.txt"
 hand_model = "hand_landmarker.task"
 face_model = "face_landmarker.task"
@@ -133,9 +133,9 @@ def preprocessor(y):
         if np.all(hand_landmarks_array == 0):
             failed(f"{video_filepath} has no landmarks")
             return
-        hand_tensor = torch.from_numpy(hand_landmarks_array, dtype=torch.float16)
-        face_tensor = torch.from_numpy(face_landmarks_array, dtype=torch.float16)
-        pose_tensor = torch.from_numpy(pose_landmarks_array, dtype=torch.float16)
+        hand_tensor = torch.from_numpy(hand_landmarks_array)
+        face_tensor = torch.from_numpy(face_landmarks_array)
+        pose_tensor = torch.from_numpy(pose_landmarks_array)
         del hand_landmarks_array, face_landmarks_array, pose_landmarks_array
         data_dict = {
             "gloss": sentence,
@@ -153,7 +153,7 @@ def preprocessor(y):
 if __name__ == "__main__":
     print("starting", flush=True)
     rows = [row for _, row in metadata.iterrows()]
-    with ProcessPoolExecutor(max_workers=12, max_tasks_per_child = 1) as executor:
+    with ProcessPoolExecutor(max_workers=10, max_tasks_per_child = 1) as executor:
         futures = [executor.submit(preprocessor, row) for row in rows]
         for i, _ in enumerate(as_completed(futures), 1):
             print(f"\r{i}/{len(futures)}", end="", flush=True, file=sys.stdout)
